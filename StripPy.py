@@ -15,13 +15,13 @@ registered = False
 
 
 def send_ch(msg, chan):
-    sock.send("PRIVMSG " + chan + " :" + msg)
+    sock.send("PRIVMSG " + chan + " :" + msg + "\r\n")
     print "PRIVMSG " + chan + " :" + msg
 
 
 while not registered:
     if sock.recv(4096).find("001") != -1:
-        sock.send("JOIN " + channel + "\n")
+        sock.send("JOIN " + channel + "\r\n")
         registered = True
 
 connected = True
@@ -35,7 +35,7 @@ while connected:
     print mail
     if mail.find("PING") != -1:
         print "found ping, sending pong"
-        sock.send("PONG " + mail.split()[1] + "\n")
-        print "PONG " + mail.split()[1] + "\n"
+        sock.send("PONG " + mail.split()[1] + "\r\n")
+        print "PONG " + mail.split()[1] + "\r\n"
     if mail.find("StripPy") != -1:
         send_ch("that's me!", channel)
