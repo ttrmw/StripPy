@@ -12,27 +12,30 @@ sock.send("USER stripPy 0 * :test\n")
 sock.send("PRIVMSG nickserv :identify\n")
 
 registered = False
-while not registered:
-    if sock.recv(4096).find("001") != -1:
-        sock.send("JOIN " + channel + "\n")
-        registered = True
 
 
 def send_ch(msg, chan):
     sock.send("PRIVMSG " + chan + " :" + msg)
     print "PRIVMSG " + chan + " :" + msg
 
-while 1:
-    mail = sock.recv(4096)
+
+while not registered:
+    if sock.recv(4096).find("001") != -1:
+        sock.send("JOIN " + channel + "\n")
+        registered = True
+
+connected = True
+while connected:
+    try:
+        mail = sock.recv(4096)
+    except socket.error as ex:
+        print ex.message
+        break
+
     print mail
     if mail.find("PING") != -1:
         print "found ping, sending pong"
         sock.send("PONG " + mail.split()[1] + "\n")
+        print "PONG " + mail.split()[1] + "\n"
     if mail.find("StripPy") != -1:
         send_ch("that's me!", channel)
-
-
-
-x = raw_input()
-
-
