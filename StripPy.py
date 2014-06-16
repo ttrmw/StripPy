@@ -1,3 +1,6 @@
+import socket
+
+
 class StrippyBot():
 
     def __init__(self, host, port, channel):
@@ -61,7 +64,10 @@ class StrippyBot():
                 self.on = False
                 return
             if mail.find("strippy") != -1:
-                self.send_channel("that's me!", self.channel )
+                if mail.lower().find(self.channel) == -1:
+                    self.send_channel("that's me!", mail.split("!")[0].lstrip(":"))
+                else:
+                    self.send_channel("that's me!", self.channel)
 
 if __name__ == "__main__":
     bot = StrippyBot("irc.emerge-it.co.uk", 6667, "#dev")
