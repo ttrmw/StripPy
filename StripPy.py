@@ -25,14 +25,9 @@ class StrippyBot():
                 self.sock.send("JOIN " + self.channel + "\r\n")
                 self.connected = True
 
-        while not self.on:
-            msg = self.receive().lower()
-            print msg
-            if msg.find("strippy on") != -1:
-                self.on = True
-                while self.connected and self.on:
-                    self.listen()
-                self.on = False
+        while self.connected:
+            self.listen()
+
 
     def receive(self):
         return self.sock.recv(1024)
@@ -53,7 +48,10 @@ class StrippyBot():
         except socket.error as ex:
             return ex.message
 
-        if mail.find("ping :" + self.host) != -1:
+        if mail.find("strippy on") != -1:
+                self.on = True
+
+        if mail.find("ping") != -1:
             print "found ping, sending pong"
             self.send("PONG " + mail.split()[1] + "\r\n")
             print "PONG " + mail.split()[1] + "\r\n"
