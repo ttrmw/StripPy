@@ -1,4 +1,5 @@
 import socket
+import StripPy_api_functions.merriam_def as merriam
 
 
 class StrippyBot():
@@ -32,12 +33,12 @@ class StrippyBot():
     def receive(self):
         return self.sock.recv(1024)
 
-    def send(self, msg):
+    def raw_send(self, msg):
         self.sock.send(msg + "\r\n")
 
     def send_channel(self, msg, recipient):
         msg = "PRIVMSG " + recipient + " :" + msg + "\r\n"
-        self.send(msg)
+        self.raw_send(msg)
         return msg
 
     def listen(self):
@@ -53,14 +54,22 @@ class StrippyBot():
 
         if mail.find("ping") != -1:
             print "found ping, sending pong"
-            self.send("PONG " + mail.split()[1] + "\r\n")
-            print "PONG " + mail.split()[1] + "\r\n"
+            self.raw_send("PONG " + mail.split()[1])
+            print "PONG " + mail.split()[1]
 
         if self.on:
             #listen for commands
+
             if mail.find("strippy off") != -1:
                 self.on = False
                 return
+
+            if mail.find("def:") != -1:
+                mail = mail.split("def:")[1].rstrip().lstrip()
+                definitions = merriam.dict_lookup(mail)
+                for i in range(0, 3):
+                    self.send_channel(definitions[i], self.channel)
+
             if mail.find("strippy") != -1:
                 if mail.lower().find(self.channel) == -1:
                     self.send_channel("that's me!", mail.split("!")[0].lstrip(":"))
@@ -70,5 +79,3 @@ class StrippyBot():
 if __name__ == "__main__":
     bot = StrippyBot("irc.emerge-it.co.uk", 6667, "#dev")
     bot.connect()
-
-    #merriam mail = mail.split("def:")[1].rstrip().lstrip()

@@ -17,10 +17,11 @@ def dict_lookup(mail):
 
     response = ET.fromstring(get_def(mail))
 
-    definitions = filter(None, [definition.text.strip(": ") for definition in response.iter("dt")])
+    definitions = filter(None, [definition.text for definition in response.iter("dt")])
+    definitions = [definition.strip(": ") for definition in definitions]
 
+    print response
     return definitions
-
 
 if __name__ == "__main__":
     import sys
