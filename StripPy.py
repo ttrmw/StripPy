@@ -70,3 +70,5 @@ class StrippyBot():
 if __name__ == "__main__":
     bot = StrippyBot("irc.emerge-it.co.uk", 6667, "#dev")
     bot.connect()
+
+    #merriam mail = mail.split("def:")[1].rstrip().lstrip()
