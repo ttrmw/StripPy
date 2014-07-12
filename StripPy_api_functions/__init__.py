@@ -1,2 +1,1 @@
-__author__ = 'ttrmw'
-__all__ = ["merriam_def"]
+__all__ = ["merriam_def", "google_suggest"]

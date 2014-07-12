@@ -28,6 +28,3 @@ if __name__ == "__main__":
     for i in sys.argv[1:]:
         for x in dict_lookup(i):
             print x
-
-
-
