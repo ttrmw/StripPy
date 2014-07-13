@@ -1,6 +1,6 @@
 import socket
 import StripPy_api_functions.merriam_def as merriam
-
+import StripPy_api_functions.google_suggest as suggest
 
 class StrippyBot():
 
@@ -28,7 +28,6 @@ class StrippyBot():
 
         while self.connected:
             self.listen()
-
 
     def receive(self):
         return self.sock.recv(1024)
@@ -67,8 +66,11 @@ class StrippyBot():
             if mail.find("def:") != -1:
                 mail = mail.split("def:")[1].rstrip().lstrip()
                 definitions = merriam.dict_lookup(mail)
-                for i in range(0, 3):
-                    self.send_channel(definitions[i], self.channel)
+                if len(definitions) == 0:
+                    suggest.google_suggest(mail)
+                else:
+                    for i in definitions[:3]:
+                        self.send_channel(i, self.channel)
 
             if mail.find("strippy") != -1:
                 if mail.lower().find(self.channel) == -1:
