@@ -66,11 +66,17 @@ class StrippyBot():
             if mail.find("def:") != -1:
                 mail = mail.split("def:")[1].rstrip().lstrip()
                 definitions = merriam.dict_lookup(mail)
+
                 if len(definitions) == 0:
-                    suggest.google_suggest(mail)
+                    suggestions = suggest.google_suggest(mail)
+                    self.send_channel("nothing found for '" + mail + "' did you mean:", self.channel)
+                    for i in suggestions[:3]:
+                        self.send_channel(" " + i, self.channel)
                 else:
+                    self.send_channel("defining '" + mail + "':", self.channel)
                     for i in definitions[:3]:
-                        self.send_channel(i, self.channel)
+                        #succinct output
+                        self.send_channel(" " + i, self.channel)
 
             if mail.find("strippy") != -1:
                 if mail.lower().find(self.channel) == -1:
