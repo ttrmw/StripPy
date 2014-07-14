@@ -12,12 +12,13 @@ class StrippyBot():
         self.connected = False
         self.on = False
         self.sock.settimeout(300)
+        self.nick = "StripPy"
 
     def connect(self):
         self.sock.connect((self.host, self.port))
 
-        self.sock.send("NICK StripPy\n")
-        self.sock.send("USER StripPy 0 * :github.com/ttrmw")
+        self.sock.send("NICK " + self.nick + "\n")
+        self.sock.send("USER " + self.nick + " 0 * :github.com/ttrmw")
 
         self.sock.send("PRIVMSG nickserv :identify\n")
 
@@ -80,7 +81,9 @@ class StrippyBot():
 
             if mail.find("strippy") != -1:
                 if mail.lower().find(self.channel) == -1:
-                    self.send_channel("that's me!", mail.split("!")[0].lstrip(":"))
+                    recipient = mail.split("!")[0].lstrip(":")
+                    if not recipient == self.nick.lower():
+                        self.send_channel("that's me!", recipient)
                 else:
                     self.send_channel("that's me!", self.channel)
 
